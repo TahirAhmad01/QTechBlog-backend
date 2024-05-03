@@ -8,11 +8,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if resource.persisted?
       render json: {
         status: {code: 200, message: 'Signed up successfully.'},
-        data: UserSerializer.new(current_user).serializable_hash[:data][:attributes]
+        data: current_user
       }
     else
       render json: {
-        status: {message: "User couldn't be created successfully. #{current_user.errors.full_messages.to_sentence}"}
+        status: {message: "User couldn't be created successfully", error: current_user.errors.full_messages}
       }, status: :unprocessable_entity
     end
   end

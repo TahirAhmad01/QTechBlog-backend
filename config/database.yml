@@ -81,4 +81,4 @@ production:
   <<: *default
   database: tech_tonic_blog_backend_production
   username: tech_tonic_blog_backend
-  password: <%= ENV["TECH_TONIC_BLOG_BACKEND_DATABASE_PASSWORD"] %>
+  password: root
