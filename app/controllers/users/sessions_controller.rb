@@ -1,5 +1,5 @@
 class Users::SessionsController < Devise::SessionsController
-  include RackSessionsFix
+  # include RackSessionsFix
   respond_to :json
 
   def create

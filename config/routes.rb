@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root 'home#index'
   scope :api, defaults: { format: :json } do
     scope :v1 do
       devise_for :users, path: 'users', path_names: {
