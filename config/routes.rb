@@ -13,9 +13,10 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :api do
+  namespace :api, defaults: { format: :json } do
     namespace :v1 do
       root to: 'home#index', as: "api_home"
+      resources :blogs
     end
   end
 

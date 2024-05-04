@@ -4,5 +4,6 @@ set -o errexit
 cp .env.sample .env
 
 bundle install
+rails db:drop
 rails db:create
 rails db:migrate
