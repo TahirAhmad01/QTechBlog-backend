@@ -1,4 +1,4 @@
-class Users::SessionsController < Devise::SessionsController
+class SessionsController < Devise::SessionsController
   # include RackSessionsFix
   respond_to :json
 
@@ -15,6 +15,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   private
+
   def respond_to_on_destroy
     token = extract_token_from_headers(request.headers['Authorization'])
 

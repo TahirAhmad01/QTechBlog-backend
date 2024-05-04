@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'home#index'
+
   scope :api, defaults: { format: :json } do
     scope :v1 do
       devise_for :users, path: 'users', path_names: {
@@ -7,9 +7,15 @@ Rails.application.routes.draw do
         sign_out: 'logout',
         registration: 'signup'
       }, controllers: {
-        sessions: 'users/sessions',
-        registrations: 'users/registrations'
+        sessions: 'sessions',
+        registrations: 'registrations'
       }
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      root to: 'home#index', as: "api_home"
     end
   end
 
