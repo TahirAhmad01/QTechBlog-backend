@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :blogs
   include Devise::JWT::RevocationStrategies::JTIMatcher
 
   devise :database_authenticatable, :registerable,
