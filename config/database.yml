@@ -80,5 +80,5 @@ test:
 production:
   <<: *default
   database: tech_tonic_blog_backend_production
-  username: tech_tonic_blog_backend
+  username: tahir
   password: root
