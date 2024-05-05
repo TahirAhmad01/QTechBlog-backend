@@ -1,5 +1,5 @@
 class Api::V1::BlogsController < ApiController
-  skip_before_action :authenticate_user!, only: [:index]
+  skip_before_action :authenticate_user!, only: [:index, :show]
   before_action :set_blog, only: [:show, :update, :destroy]
   before_action :set_page, only: [:index]
 
@@ -39,6 +39,7 @@ class Api::V1::BlogsController < ApiController
 
   def create
     @blog = current_user.blogs.new(blog_params)
+    @blog.slug = generate_slug(blog_params[:title])
     if @blog.save
       render json: { message: "Blog created successfully", data: blog_json(@blog) }, status: :created
     else
@@ -47,6 +48,7 @@ class Api::V1::BlogsController < ApiController
   end
 
   def update
+    @blog.slug = generate_slug(blog_params[:title])
     if @blog.update(blog_params)
       render json: { message: "Blog updated successfully", data: blog_json(@blog) }, status: :ok
     else
@@ -69,7 +71,7 @@ class Api::V1::BlogsController < ApiController
   end
 
   def blog_params
-    params.require(:blog).permit(:title, :description, :short_description, :body, :slug, :blog_status, :user_id, tags: [])
+    params.require(:blog).permit(:title, :description, :short_description, :body, :blog_status, :user_id, tags: [])
   end
 
   def blog_json(blog)
@@ -78,5 +80,9 @@ class Api::V1::BlogsController < ApiController
 
   def set_page
     @page = params[:page]&.to_i || 1
+  end
+
+  def generate_slug(title)
+    title.parameterize
   end
 end
