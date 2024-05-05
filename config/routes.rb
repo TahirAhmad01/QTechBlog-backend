@@ -16,7 +16,10 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       root to: 'home#index', as: "api_home"
-      resources :blogs
+      resources :blogs do
+        post 'search', on: :collection, action: :search
+        get ':id/:slug', on: :collection, action: :show, as: :show_by_slug
+      end
     end
   end
 
