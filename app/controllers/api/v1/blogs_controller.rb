@@ -1,34 +1,34 @@
 class Api::V1::BlogsController < ApiController
-  skip_before_action :authenticate_user!, only: [:index, :show]
+  skip_before_action :authenticate_user!, only: [:index, :show, :search]
   before_action :set_blog, only: [:show, :update, :destroy]
   before_action :set_page, only: [:index]
 
   def index
-    @blogs = Blog.paginate(page: @page, per_page: params[:per_page].present? ? params[:per_page].to_i : 10)
+    @blogs = Blog.paginate(page: @page, per_page: params[:per_page].to_i.positive? ? params[:per_page].to_i : 10)
     @total_blogs = Blog.count
 
-    response.headers['Pagination'] = {
+    pagination_info = {
       total_pages: @blogs.total_pages,
       current_page: @blogs.current_page,
       next_page: @blogs.next_page,
-      prev_page: @blogs.previous_page,
-      total_entries: @blogs.total_entries
-    }.to_json
-
-    pageInfo = {
-      total_pages: @blogs.total_pages,
-      current_page: @blogs.current_page,
-      next_page: @blogs.next_page,
-      prev_page: @blogs.previous_page,
+      prev_page: @blogs.previous_page
     }
 
+    response.headers.merge!(
+      'X-Total-Count' => @total_blogs.to_s,
+      'X-Per-Page' => @blogs.per_page.to_s,
+      'Link' => pagination_links(@blogs)
+    )
+
     if @blogs.any?
-      render json: { status: 'success', data: @blogs, total_blog: @total_blogs, pagination: pageInfo }, status: :ok
+      render json: { status: 'success', data: @blogs, total_blog: @total_blogs, pagination: pagination_info }, status: :ok
     else
-      render json: { status: 'success', message: "No blogs found", data: [], total_blog: 0, pagination: pageInfo }, status: :ok
+      render json: { status: 'success', message: "No blogs found", data: [], total_blog: @total_blogs, pagination: pagination_info }, status: :ok
     end
   rescue WillPaginate::InvalidPage => exception
     render json: { status: 'error', message: exception.message }, status: :bad_request
+  rescue StandardError => e
+    render json: { status: 'error', message: e.message }, status: :internal_server_error
   end
 
   def show
@@ -64,6 +64,20 @@ class Api::V1::BlogsController < ApiController
     end
   end
 
+  def search
+    query = params[:search].downcase
+
+    if query.present?
+      @blogs = Blog.where('LOWER(title) LIKE ? OR LOWER(description) LIKE ?', "%#{query}%", "%#{query}%")
+      render json: { status: 'success', data: @blogs }, status: :ok
+    else
+      render json: { status: 'error', message: 'Query parameter "search" is missing' }, status: :bad_request
+    end
+  end
+
+
+
+
   private
 
   def set_blog
@@ -84,5 +98,13 @@ class Api::V1::BlogsController < ApiController
 
   def generate_slug(title)
     title.parameterize
+  end
+
+  def pagination_links(collection)
+    links = []
+    links << "<#{request.base_url}#{request.path}?page=#{collection.next_page}>; rel=\"next\"" if collection.next_page
+    links << "<#{request.base_url}#{request.path}?page=#{collection.previous_page}>; rel=\"prev\"" if collection.previous_page
+    links << "<#{request.base_url}#{request.path}?page=#{collection.total_pages}>; rel=\"last\""
+    links.join(', ').presence
   end
 end
