@@ -1,9 +1,10 @@
 class Api::V1::BlogsController < ApiController
+  skip_before_action :authenticate_user!, only: [:index]
   before_action :set_blog, only: [:show, :update, :destroy]
   before_action :set_page, only: [:index]
 
   def index
-    @blogs = Blog.paginate(page: @page, per_page: 10)
+    @blogs = Blog.paginate(page: @page, per_page: params[:per_page].present? ? params[:per_page].to_i : 10)
     @total_blogs = Blog.count
 
     response.headers['Pagination'] = {
@@ -24,13 +25,11 @@ class Api::V1::BlogsController < ApiController
     if @blogs.any?
       render json: { status: 'success', data: @blogs, total_blog: @total_blogs, pagination: pageInfo }, status: :ok
     else
-      render json: { status: 'success', message: "No blogs found", data: [], total_blog: 0 }, status: :ok
+      render json: { status: 'success', message: "No blogs found", data: [], total_blog: 0, pagination: pageInfo }, status: :ok
     end
   rescue WillPaginate::InvalidPage => exception
     render json: { status: 'error', message: exception.message }, status: :bad_request
   end
-
-
 
   def show
     render json: { status: 'Success', data: @blog }, status: :ok
