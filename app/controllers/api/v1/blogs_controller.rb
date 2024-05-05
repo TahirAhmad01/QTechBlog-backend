@@ -1,7 +1,7 @@
 class Api::V1::BlogsController < ApiController
   skip_before_action :authenticate_user!, only: [:index, :show, :search]
   before_action :set_blog, only: [:show, :update, :destroy]
-  before_action :set_page, only: [:index]
+  before_action :set_page, only: [:index, :search]
 
   def index
     @blogs = Blog.paginate(page: @page, per_page: params[:per_page].to_i.positive? ? params[:per_page].to_i : 10)
@@ -65,18 +65,24 @@ class Api::V1::BlogsController < ApiController
   end
 
   def search
-    query = params[:search].downcase
+    query = params[:q].downcase
 
     if query.present?
-      @blogs = Blog.where('LOWER(title) LIKE ? OR LOWER(description) LIKE ?', "%#{query}%", "%#{query}%")
-      render json: { status: 'success', data: @blogs }, status: :ok
+      @blogs = Blog.where('LOWER(title) LIKE ? OR LOWER(description) LIKE ? OR LOWER(body) LIKE ? OR LOWER(tags::text) LIKE ?', "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%")
+                   .paginate(page: @page, per_page: params[:per_page].to_i.positive? ? params[:per_page].to_i : 30)
+
+      pagination_info = {
+        total_pages: @blogs.total_pages,
+        current_page: @blogs.current_page,
+        next_page: @blogs.next_page,
+        prev_page: @blogs.previous_page
+      }
+
+      render json: { status: 'success', data: @blogs, total: @blogs.count, pagination: pagination_info }, status: :ok
     else
-      render json: { status: 'error', message: 'Query parameter "search" is missing' }, status: :bad_request
+      render json: { status: 'error', message: 'Query parameter "q" is missing' }, status: :bad_request
     end
   end
-
-
-
 
   private
 
