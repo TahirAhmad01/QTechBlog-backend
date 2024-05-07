@@ -18,7 +18,8 @@ Rails.application.routes.draw do
       root to: 'home#index', as: "api_home"
       resources :blogs do
         post 'search', on: :collection, action: :search
-        get ':id/:slug', on: :collection, action: :show, as: :show_by_slug
+        # get ':id/:slug', on: :collection, action: :show, as: :show_by_slug
+        resources :comments # Change `resource :comments` to `resources :comments`
       end
     end
   end
