@@ -1,5 +1,6 @@
 class Blog < ApplicationRecord
   belongs_to :user
+  has_many :comments, dependent: :destroy
 
   enum blog_status: {
     draft: 0,
