@@ -103,5 +103,4 @@ class Api::V1::CommentsController < ApiController
       replies: comment.replies.map { |reply| format_comment_with_replies(reply) }
     }
   end
-
 end
