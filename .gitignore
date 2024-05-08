@@ -30,5 +30,5 @@
 !/tmp/storage/.keep
 
 # Ignore master key for decrypting credentials and more.
-/config/master.key
-/congig/credentials.yml.enc
+#/config/master.key
+#/congig/credentials.yml.enc
