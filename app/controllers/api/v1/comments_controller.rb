@@ -34,7 +34,7 @@ class Api::V1::CommentsController < ApiController
     if @comment.save
       render json: { status: "success", message: "Blog create successfully", data: @comment}, status: :created
     else
-      render json: { status: "Failed", message: "Blog create Failed", error: @comment.errors.full_messages}, status: :unprocessable_entity
+      render json: { status: "Failed", message: "Blog create Failed", error: @comment.errors}, status: :unprocessable_entity
     end
   end
 
@@ -42,7 +42,7 @@ class Api::V1::CommentsController < ApiController
     if @comment.update(comment_update_params)
       render json: { status: "success", message: "Comment update successfully", data: @comment }, status: :ok
     else
-      render json: { status: "error", message: "Comment update failed", error: @comment.errors.full_messages }, status: :unprocessable_entity
+      render json: { status: "error", message: "Comment update failed", error: @comment.errors }, status: :unprocessable_entity
     end
   end
 
@@ -50,7 +50,7 @@ class Api::V1::CommentsController < ApiController
     if @comment.destroy
       render json: { message: 'Comment deleted successfully', data: @comment }, status: :ok
     else
-      render json: { status: "error", message: "Comment delete failed", error: @comment.errors.full_messages }, status: :unprocessable_entity
+      render json: { status: "error", message: "Comment delete failed", error: @comment.errors }, status: :unprocessable_entity
     end
   end
 

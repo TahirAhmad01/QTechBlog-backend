@@ -43,7 +43,7 @@ class Api::V1::BlogsController < ApiController
     if @blog.save
       render json: { message: "Blog created successfully", data: blog_json(@blog) }, status: :created
     else
-      render json: { message: "Blog create failed", errors: @blog.errors.full_messages, status: :unprocessable_entity }, status: :unprocessable_entity
+      render json: { message: "Blog create failed", errors: @blog.errors, status: :unprocessable_entity }, status: :unprocessable_entity
     end
   end
 
@@ -52,7 +52,7 @@ class Api::V1::BlogsController < ApiController
     if @blog.update(blog_params)
       render json: { message: "Blog updated successfully", data: blog_json(@blog) }, status: :ok
     else
-      render json: { message: "Blog update failed", errors: @blog.errors.full_messages, status: :unprocessable_entity }, status: :unprocessable_entity
+      render json: { message: "Blog update failed", errors: @blog.errors, status: :unprocessable_entity }, status: :unprocessable_entity
     end
   end
 
@@ -88,6 +88,8 @@ class Api::V1::BlogsController < ApiController
 
   def set_blog
     @blog = Blog.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { status: "error", message: e.message }, status: :not_found
   end
 
   def blog_params

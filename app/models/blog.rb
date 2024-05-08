@@ -1,6 +1,7 @@
 class Blog < ApplicationRecord
   belongs_to :user
-  has_many :comments, dependent: :destroy
+  has_many :comment, dependent: :destroy
+  has_and_belongs_to_many :tag
 
   enum blog_status: {
     draft: 0,
@@ -21,6 +22,9 @@ class Blog < ApplicationRecord
 
   def tags_presence
     errors.add(:tags, "can't be blank") unless tags.present?
+    tags.each do |tag|
+      errors.add(:tags, "tag '#{tag}' does not exist") unless Tag.exists?(name: tag)
+    end if tags.present?
   end
 
   def set_default_status
