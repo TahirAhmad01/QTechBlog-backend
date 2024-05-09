@@ -1,5 +1,7 @@
 class Blog < ApplicationRecord
   belongs_to :user
+  belongs_to :category
+
   has_many :comment, dependent: :destroy
   has_and_belongs_to_many :tag
 
@@ -15,6 +17,7 @@ class Blog < ApplicationRecord
   validates :description, :short_description, :slug, presence: true
   validate :tags_presence
   validates :blog_status, presence: true, inclusion: { in: blog_statuses.keys }
+  validates :category, presence: true
 
   after_initialize :set_default_status, if: :new_record?
 
