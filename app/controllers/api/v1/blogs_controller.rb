@@ -93,7 +93,7 @@ class Api::V1::BlogsController < ApiController
   end
 
   def blog_params
-    params.require(:blog).permit(:title, :description, :short_description, :body, :blog_status, :user_id, tags: [])
+    params.require(:blog).permit(:title, :description, :short_description, :body, :blog_status, :user_id, :category_id, tags: [])
   end
 
   def blog_json(blog)
