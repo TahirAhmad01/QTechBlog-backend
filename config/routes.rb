@@ -19,8 +19,9 @@ Rails.application.routes.draw do
       resources :blogs do
         post 'search', on: :collection, action: :search
         # get ':id/:slug', on: :collection, action: :show, as: :show_by_slug
-        resources :comments # Change `resource :comments` to `resources :comments`
+        resources :comments
       end
+      resources :tags
     end
   end
 
