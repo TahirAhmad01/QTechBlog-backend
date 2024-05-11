@@ -55,3 +55,5 @@ gem 'will_paginate'
 gem "kaminari"
 
 
+
+gem "cancancan", "~> 3.5"
