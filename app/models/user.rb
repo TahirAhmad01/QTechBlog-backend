@@ -8,6 +8,7 @@ class User < ApplicationRecord
 
   validates :first_name, :last_name, presence: true, length: {minimum: 2}
   validates :username, presence: true, uniqueness: true
+  validates :role, inclusion: { in: ROLES }
 
   ROLES = %w{super_admin admin author user}
 
@@ -27,6 +28,10 @@ class User < ApplicationRecord
 
     token.update(exp: Time.current + 2.minutes.to_i)
     false
+  end
+
+  def set_user_role
+    self.role ||= 'user'
   end
 
 end
