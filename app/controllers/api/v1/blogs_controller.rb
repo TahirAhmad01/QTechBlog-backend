@@ -41,9 +41,7 @@ class Api::V1::BlogsController < ApiController
       session[:viewed_blogs] = viewed_blogs
     end
 
-    render json: { status: 'Success', data: @blog, view_count: @blog.views_count }, status: :ok
-  rescue ActiveRecord::RecordNotFound => e
-    render json: { message: e.message, status: :not_found }, status: :not_found
+    render json: { status: 'Success', data: @blog, session: session }, status: :ok
   end
 
   def create
