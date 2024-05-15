@@ -1,5 +1,6 @@
 class Api::V1::TagsController < ApiController
   load_and_authorize_resource
+  skip_before_action :authenticate_user!, only: [:index, :show]
   before_action :set_tag, only: [:show, :update, :destroy]
 
   def index

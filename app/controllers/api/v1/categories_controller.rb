@@ -1,6 +1,8 @@
 class Api::V1::CategoriesController < ApiController
   load_and_authorize_resource
+  skip_before_action :authenticate_user!, only: [:index, :show]
   before_action :set_category, only: [:show, :update, :destroy]
+
   def index
     @categories = Category.all
     render json: @categories, status: 200
