@@ -33,7 +33,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_12_150957) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "category"
     t.bigint "category_id"
     t.index ["category_id"], name: "index_blogs_on_category_id"
     t.index ["user_id"], name: "index_blogs_on_user_id"
