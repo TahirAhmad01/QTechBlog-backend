@@ -1,4 +1,5 @@
 class Api::V1::BlogsController < ApiController
+  load_and_authorize_resource
   skip_before_action :authenticate_user!, only: [:index, :show, :search]
   before_action :set_blog, only: [:show, :update, :destroy]
   before_action :set_page, only: [:index, :search]

@@ -1,4 +1,5 @@
 class Api::V1::CategoriesController < ApiController
+  load_and_authorize_resource
   before_action :set_category, only: [:show, :update, :destroy]
   def index
     @categories = Category.all

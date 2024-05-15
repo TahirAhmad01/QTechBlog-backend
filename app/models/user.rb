@@ -6,11 +6,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
 
+  ROLES = %w{super_admin admin author user}
+
   validates :first_name, :last_name, presence: true, length: {minimum: 2}
   validates :username, presence: true, uniqueness: true
   validates :role, inclusion: { in: ROLES }
-
-  ROLES = %w{super_admin admin author user}
 
   ROLES.each do |role_name|
     define_method "#{role_name}?" do
