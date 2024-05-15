@@ -33,7 +33,15 @@ class Api::V1::BlogsController < ApiController
   end
 
   def show
-    render json: { status: 'Success', data: @blog }, status: :ok
+    viewed_blogs = session[:viewed_blogs] || []
+
+    unless viewed_blogs.include?(@blog.id)
+      @blog.increment!(:views_count)
+      viewed_blogs << @blog.id
+      session[:viewed_blogs] = viewed_blogs
+    end
+
+    render json: { status: 'Success', data: @blog, view_count: @blog.views_count }, status: :ok
   rescue ActiveRecord::RecordNotFound => e
     render json: { message: e.message, status: :not_found }, status: :not_found
   end
