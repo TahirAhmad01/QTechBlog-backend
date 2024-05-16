@@ -1,8 +1,8 @@
 class Api::V1::BlogsController < ApiController
   load_and_authorize_resource
-  skip_before_action :authenticate_user!, only: [:index, :show, :search]
-  before_action :set_blog, only: [:show, :update, :destroy]
-  before_action :set_page, only: [:index, :search]
+  skip_before_action :authenticate_user!, only: %i[index show search]
+  before_action :set_blog, only: %i[show update destroy]
+  before_action :set_page, only: %i[index search]
 
   def index
     @blogs = Blog.paginate(page: @page, per_page: params[:per_page].to_i.positive? ? params[:per_page].to_i : 10)
@@ -41,7 +41,7 @@ class Api::V1::BlogsController < ApiController
       session[:viewed_blogs] = viewed_blogs
     end
 
-    render json: { status: 'Success', data: @blog, session: session }, status: :ok
+    render json: { status: 'Success', data: @blog, viewed_blogs: session[:viewed_blogs] }, status: :ok
   end
 
   def create
@@ -89,6 +89,11 @@ class Api::V1::BlogsController < ApiController
     else
       render json: { status: 'error', message: 'Query parameter "q" is missing' }, status: :bad_request
     end
+  end
+
+  def viewed_blog
+    viewed_blogs = session[:viewed_blogs]
+    render json: { status: 'success', data: viewed_blogs, total:viewed_blogs.count}
   end
 
   private

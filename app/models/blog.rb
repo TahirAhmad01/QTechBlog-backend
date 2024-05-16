@@ -19,7 +19,7 @@ class Blog < ApplicationRecord
   validates :blog_status, presence: true, inclusion: { in: blog_statuses.keys }
   validates :category, presence: true
   validate :tags_presence
-  validate :blog_thumbnail_presence
+  # validate :blog_thumbnail_presence
 
   after_initialize :set_default_status, if: :new_record?
 
@@ -36,7 +36,7 @@ class Blog < ApplicationRecord
     self.blog_status ||= :published
   end
 
-  def blog_thumbnail_presence
-    errors.add(:blog_thumbnail, "can't be blank") unless blog_thumbnail.attached?
-  end
+  # def blog_thumbnail_presence
+  #   errors.add(:blog_thumbnail, "can't be blank") unless blog_thumbnail.attached?
+  # end
 end
