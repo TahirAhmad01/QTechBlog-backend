@@ -54,3 +54,4 @@ gem 'jsonapi-serializer'
 gem 'will_paginate'
 gem "kaminari"
 gem "cancancan", "~> 3.5"
+gem 'activestorage'
