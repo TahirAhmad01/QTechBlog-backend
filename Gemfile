@@ -46,13 +46,11 @@ group :development do
 
   gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
 end
-gem "dotenv", "~> 3.1"
 
+gem "dotenv", "~> 3.1"
 gem "devise", "~> 4.9"
 gem 'devise-jwt'
 gem 'jsonapi-serializer'
 gem 'will_paginate'
 gem "kaminari"
-
 gem "cancancan", "~> 3.5"
-gem 'action_controller-cookies'
