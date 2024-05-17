@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       root to: 'home#index', as: "api_home"
       resources :blogs do
         post 'search', on: :collection, action: :search
+        get 'viewed_blogs', on: :collection, action: :viewed_blog
         # get ':id/:slug', on: :collection, action: :show, as: :show_by_slug
         resources :comments
       end

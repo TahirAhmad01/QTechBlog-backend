@@ -1,5 +1,7 @@
 class User < ApplicationRecord
   has_many :blogs
+  before_validation :set_user_role, on: :create
+
   include Devise::JWT::RevocationStrategies::JTIMatcher
 
   devise :database_authenticatable, :registerable,
