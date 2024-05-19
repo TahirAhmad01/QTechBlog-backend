@@ -22,6 +22,7 @@ Rails.application.routes.draw do
         # get ':id/:slug', on: :collection, action: :show, as: :show_by_slug
         resources :comments
       end
+      resource :featured_blog
       resources :tags
       resources :categories
     end
