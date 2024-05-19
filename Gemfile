@@ -55,3 +55,7 @@ gem 'will_paginate'
 gem "kaminari"
 gem "cancancan", "~> 3.5"
 gem 'activestorage'
+gem 'omniauth'
+gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'

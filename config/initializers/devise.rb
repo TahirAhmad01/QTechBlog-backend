@@ -321,4 +321,7 @@ Devise.setup do |config|
     ]
     jwt.expiration_time = 365.days.to_i
   end
+
+  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], scope: 'email', info_fields: 'email,name'
+  config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], scope: 'userinfo.email,userinfo.profile'
 end
