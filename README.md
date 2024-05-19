@@ -1,24 +1,20 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Project Setup
+- Clone the project:
 
-Things you may want to cover:
+        git clone git@github.com:TahirAhmad01/TechTonicBlog-backend.git
+        cd TechTonicBlog-backend
+        cp .env.sample .env
 
-* Ruby version
+- Install dependencies:
 
-* System dependencies
+        bundle install
+        yarn install
+        rake db:create
+        rake db:migrate
+        rake db:seed
 
-* Configuration
+- Run the Rails server:
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+        rails s

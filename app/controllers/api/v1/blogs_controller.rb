@@ -1,7 +1,8 @@
 class Api::V1::BlogsController < ApiController
-  skip_before_action :authenticate_user!, only: [:index, :show, :search]
-  before_action :set_blog, only: [:show, :update, :destroy]
-  before_action :set_page, only: [:index, :search]
+  load_and_authorize_resource
+  skip_before_action :authenticate_user!, only: %i[index show search]
+  before_action :set_blog, only: %i[show update destroy]
+  before_action :set_page, only: %i[index search]
 
   def index
     @blogs = Blog.paginate(page: @page, per_page: params[:per_page].to_i.positive? ? params[:per_page].to_i : 10)
@@ -32,9 +33,15 @@ class Api::V1::BlogsController < ApiController
   end
 
   def show
-    render json: { status: 'Success', data: @blog }, status: :ok
-  rescue ActiveRecord::RecordNotFound => e
-    render json: { message: e.message, status: :not_found }, status: :not_found
+    viewed_blogs = session[:viewed_blogs] || []
+
+    unless viewed_blogs.include?(@blog.id)
+      @blog.increment!(:views_count)
+      viewed_blogs << @blog.id
+      session[:viewed_blogs] = viewed_blogs
+    end
+
+    render json: { status: 'Success', data: @blog, viewed_blogs: session[:viewed_blogs] }, status: :ok
   end
 
   def create
@@ -43,7 +50,7 @@ class Api::V1::BlogsController < ApiController
     if @blog.save
       render json: { message: "Blog created successfully", data: blog_json(@blog) }, status: :created
     else
-      render json: { message: "Blog create failed", errors: @blog.errors.full_messages, status: :unprocessable_entity }, status: :unprocessable_entity
+      render json: { message: "Blog create failed", errors: @blog.errors, status: :unprocessable_entity }, status: :unprocessable_entity
     end
   end
 
@@ -52,7 +59,7 @@ class Api::V1::BlogsController < ApiController
     if @blog.update(blog_params)
       render json: { message: "Blog updated successfully", data: blog_json(@blog) }, status: :ok
     else
-      render json: { message: "Blog update failed", errors: @blog.errors.full_messages, status: :unprocessable_entity }, status: :unprocessable_entity
+      render json: { message: "Blog update failed", errors: @blog.errors, status: :unprocessable_entity }, status: :unprocessable_entity
     end
   end
 
@@ -84,14 +91,21 @@ class Api::V1::BlogsController < ApiController
     end
   end
 
+  def viewed_blog
+    viewed_blogs = session[:viewed_blogs]
+    render json: { status: 'success', data: viewed_blogs, total:viewed_blogs.count}
+  end
+
   private
 
   def set_blog
     @blog = Blog.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { status: "error", message: e.message }, status: :not_found
   end
 
   def blog_params
-    params.require(:blog).permit(:title, :description, :short_description, :body, :blog_status, :user_id, tags: [])
+    params.require(:blog).permit(:title, :description, :short_description, :body, :blog_status, :user_id, :category_id, :blog_thumbnail, tags: [])
   end
 
   def blog_json(blog)

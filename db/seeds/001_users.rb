@@ -1,0 +1,17 @@
+users = [
+  ['super' , 'admin', 'SuperAdmin', "super_admin@blog.com"]
+]
+
+users.each do |first_name, last_name, username, email|
+  user = User.find_or_initialize_by(email: email)
+  user.first_name = first_name
+  user.last_name = last_name
+  user.username = username
+  user.email = email
+  user.password = "Tt1419h."
+  user.password_confirmation = "Tt1419h."
+  user.role = "super_admin"
+  user.save
+end
+
+puts "=========== Completed user insert =============="
