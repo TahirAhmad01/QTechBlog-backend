@@ -10,6 +10,8 @@ Rails.application.routes.draw do
         sessions: 'sessions',
         registrations: 'registrations'
       }
+
+      resources :users, only: [:show]
     end
   end
 
