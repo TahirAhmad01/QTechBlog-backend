@@ -8,8 +8,8 @@ users.each do |first_name, last_name, username, email|
   user.last_name = last_name
   user.username = username
   user.email = email
-  user.password = "Tt1419h."
-  user.password_confirmation = "Tt1419h."
+  user.password = "Test!**34"
+  user.password_confirmation = "Test!**34"
   user.role = "super_admin"
   user.save
 end
